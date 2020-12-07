@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html class="ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="lt-ie10" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="UTF-8">
+	<title>NAS-DIP: Learning Deep Image Prior with Neural Architecture Search - Supplementary Material</title>
+	<link href="css/foundation.css" rel="stylesheet" type="text/css" />
+	<link href="css/twentytwenty.css" rel="stylesheet" type="text/css" />
+	<!-- jQuery -->
+	<script
+		src="https://code.jquery.com/jquery-3.1.0.min.js"
+		integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
+		crossorigin="anonymous"></script>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<br>
+				<h1>NAS-DIP: Learning Deep Image Prior with Neural Architecture Search</h1>
+				<br>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-xs-12 text-left">
+				<a href="../index.html">
+					<button type="button" class="btn btn-link">
+						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Back
+					</button>
+				</a>
+				<br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 text-left">
+				<h3>Results on image-to-image translation</h3>
+				<hr>
+				<div class="well well-sm">
+					<form class="form-inline">
+						<div class="form-group">
+							<label for="dataset-select">Dataset:&nbsp;</label>
+							<select class="form-control" id="dataset-select" oninput="ChangeDataset();">
+								<option value="stw 10">Summer2Winter</option>
+								<option value="wts 10">Winter2Summer</option>
+							</select>
+						</div>
+						&emsp;
+						<div class="form-group">
+							<label for="frame-idx-input">Frame: <span id="frame-idx">01</span> / <span id="frame-total">10</span>&nbsp;</label>
+							<span id="sequence_name" style="display:inline-block; font-weight:bold; width:250px;">: 2010-09-07 12:23:20&nbsp;</span>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-info" type="button" onclick="PrevFrame();"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+								</span>
+								<input type="range" class="form-control" id="frame-idx-input" min="1" max="10" step="1" value="1" oninput="ChangeFrame();">
+								<span class="input-group-btn">
+									<button class="btn btn-info" type="button" onclick="NextFrame();"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+								</span>
+							</div>
+						</div>
+					</form>
+					<hr style="margin: 7px;">
+					<h5><strong>Method:&nbsp;</strong></h5>
+					<ul class="nav nav-pills" id="current-view-ul">
+						<li role="presentation" id="tab0"><a href="javascript: void(0);" onclick="ChangeCurrentView(0);">CycleGAN</a></li>
+						<li role="presentation" id="tab1"><a href="javascript: void(0);" onclick="ChangeCurrentView(1);">Ours</a></li>
+					</ul>
+				</div>
+				<center><h5 id="dataset_link"><a href="https://people.eecs.berkeley.edu/~taesung_park/CycleGAN/datasets/summer2winter_yosemite.zip">Summer2Winter dataset link</a></h5></center>
+				<center><h5 id="method_author">&nbsp;</h5></center>
+				<center><h5 id="method_title" style="font-weight:bold">&nbsp;</h5></center>
+				<center><h5 id="method_publication">&nbsp;</h5></center>
+				<center><h5 id="method_remarks"></h5></center>
+				<center><h5 id="code_link">&nbsp;</h5></center>
+
+			</div>
+			<!-- <div class="col-xs-12 text-center"> -->
+				<!-- <img src="../results/reflection/multi5/00000_B2.jpg" id="showoff-img" class="img-responsive"> -->
+			<!-- </div> -->
+			<div class="row" style="margin-top: 2em;" id='image_slider'>
+			  <div class="large-4 columns">
+				<div class="twentytwenty-container" id='twenty_container'>
+						<img src="../results/Translation/Ours/2014_10_17_23_25_01_real_A.jpg" id="showoff-img-I"/>
+						<img src="../results/Translation/Ours/2014_10_17_23_25_01_fake_B.jpg" id="showoff-img-B"/>
+				</div>
+			  </div>
+			</div>
+
+			<div class="row" style="margin-top: 2em; display:none" id='video_canvas'>
+			  <div class="large-6 columns">
+			    <video id="input_video" width="425" controls="controls" onended="this.currentTime = 0; this.play();">
+					<source src="../results/reflection/Input/00001_I.mp4" type="video/mp4"/>
+				</video>
+				<h5><strong><center>Input sequence</center></strong></h5>
+			    <!-- <img src="../results/reflection/Input/00000_I2.jpg" id="showoff-video"/> -->
+			  </div>
+			</div>
+
+			<br>
+			<br>
+		</div>
+
+	</div>
+
+
+
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+    <script src="js/jquery.event.move.js"></script>
+    <script src="js/jquery.twentytwenty.js"></script>
+    <script>
+    $(function(){
+      $(".twentytwenty-container[data-orientation!='vertical']").twentytwenty({default_offset_pct: 0.7});
+      $(".twentytwenty-container[data-orientation='vertical']").twentytwenty({default_offset_pct: 0.3, orientation: 'vertical'});
+    });
+    </script>
+
+	<style type="text/css">
+.container {
+	background-color: #FBFBFC;
+}
+.teaser-img {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.img-responsive {
+	margin: auto;
+}
+.comparison-table {
+	table-layout: fixed;
+		word-wrap: break-word;
+}
+.comparison-table th {
+	text-align: center;
+}
+.disabled{
+    pointer-events:none;
+    opacity:0.7;
+}
+	</style>
+
+	<script type="text/javascript">
+	var currentViewList = ["input", "single0", "single1", "single2", "single3", "single4", "single5", "multi0", "multi1", "multi2", "multi3", "multi4", "multi5"];
+	var currentView = "multi5";
+	// CHANGE TO MATCH DSET FILENAMES
+	var sum2win_naming=['2014_10_17_23_25_01', '2015_07_15_00_39_20', '2012_09_10_18_45_10', '2011_07_05_10_40_51', '2014_09_10_13_20_11', '2016_05_17_14_48_51', '2016_07_18_17_05_40', '2013_05_15_14_16_11', '2011_08_21_16_52_50', '2012_06_26_23_28_50']
+	// CHANGE TO MATCH INDEX ORDER TO DISPLAY EACH DATASET
+    var id_sum2win = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+	function ChangeDataset(){
+
+		var dataset = document.getElementById("dataset-select").value.split(" ")[0];
+
+		if(dataset=='stw'){
+			document.getElementById("sequence_name").innerHTML = ": 2010_09_07_12_23_20&nbsp;";
+		}
+
+		if(dataset=='wts'){
+			document.getElementById("sequence_name").innerHTML = ": 2010_09_07_12_23_20&nbsp;";
+		}
+
+
+		var frame_total = parseInt(document.getElementById("dataset-select").value.split(" ")[1]);
+		document.getElementById("frame-total").innerHTML = frame_total;
+		document.getElementById("frame-idx-input").value = 1;
+		document.getElementById("frame-idx-input").max = frame_total;
+		ChangeFrame();
+	}
+
+
+	function ChangeFrame(){
+
+		var dataset = document.getElementById("dataset-select").value.split(" ")[0];
+                var method = $('.nav-pills .active').text();
+
+
+		if(dataset=="stw"){
+			var img_from="_real_A";
+			var img_to="_fake_B";
+		}
+		if(dataset=="wts"){
+			var img_from="_real_B";
+			var img_to="_fake_A";
+		}
+
+		var image_nameing = sum2win_naming
+		var frame_idx = parseInt(document.getElementById("frame-idx-input").value);
+		var start_idx = 0;
+
+		document.getElementById("frame-idx").innerHTML = ("00" + frame_idx).slice(-2);
+		document.getElementById("sequence_name").innerHTML = ": "+image_nameing[parseInt(frame_idx - 1)]+"&nbsp;";
+		// CHANGE INPUT PATH
+		$("#showoff-img-I").attr("src", "../results/Translation/" + method + "/" + image_nameing[parseInt(frame_idx - 1)] + img_from + ".jpg").on('load', function() {
+		  console.log($("#showoff-img-I").height());
+		  var container = $(".twentytwenty-container[data-orientation!='vertical']");
+		  var h = $("#showoff-img-I").height();
+		  container.css("height", $("#showoff-img-I").height());
+		  var beforeImg = container.find("img:first");
+		  var afterImg = container.find("img:last");
+		  clip_args = beforeImg[0].style.clip.split(',')
+		  new_clip_args = [clip_args[0], clip_args[1], h+'px', clip_args[3]];
+		  beforeImg[0].style.clip = new_clip_args.join()
+		  clip_args = afterImg[0].style.clip.split(',')
+		  new_clip_args = [clip_args[0], clip_args[1], h+'px', clip_args[3]];
+		  afterImg[0].style.clip = new_clip_args.join()
+		});
+		// CHANGE RESULTS PATH
+		document.getElementById("showoff-img-B").src = "../results/Translation/" + method + "/" + image_nameing[parseInt(frame_idx - 1)] + img_to + ".jpg";
+	}
+
+	function NextFrame(){
+		var dataset = document.getElementById("dataset-select").value.split(" ")[0];
+		var frame_total = parseInt(document.getElementById("dataset-select").value.split(" ")[1]);
+		var frame_idx = parseInt(document.getElementById("frame-idx-input").value);
+		if(frame_idx < frame_total){
+			document.getElementById("frame-idx-input").value = frame_idx + 1;
+			ChangeFrame();
+		}
+
+	}
+
+	function PrevFrame(){
+		var frame_idx = parseInt(document.getElementById("frame-idx-input").value);
+		if(frame_idx > 1){
+			document.getElementById("frame-idx-input").value = frame_idx - 1;
+			ChangeFrame();
+			<!-- $(function(){ -->
+		}
+	}
+
+	function ChangeCurrentView(idx){
+		// CHANGE TEXT FOR EACH METHOD
+		if(idx == 0){
+			document.getElementById("method_author").innerHTML = "Jun-Yan Zhu, Taesung Park, Phillip Isola, and Alexei A. Efros";
+			document.getElementById("method_title").innerHTML = "Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networkss";
+			document.getElementById("method_publication").innerHTML = "IEEE International Conference on Computer Vision (ICCV), 2017";
+			document.getElementById("method_remarks").innerHTML = "";
+			document.getElementById("code_link").innerHTML = "Code: <a href='https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix'>link</a>";
+		}
+
+		if(idx == 1){
+			document.getElementById("method_author").innerHTML = "Yun-Chun Chen, Chen Gao, Esther Robb, and Jia-Bin Huang";
+			document.getElementById("method_title").innerHTML = "NAS-DIP: Learning Deep Image Prior with Neural Architecture Search";
+			document.getElementById("method_publication").innerHTML = "European Conference on Computer Vision (ECCV), 2020";
+			document.getElementById("method_remarks").innerHTML = "";
+			document.getElementById("code_link").innerHTML = "&nbsp";
+		}
+
+		var li_list = document.getElementById("current-view-ul").children;
+		console.log(idx);
+		console.log(li_list);
+		for(i = 0; i < li_list.length; i++){
+			li_list[i].className = "";
+		}
+		li_list[idx].className = "active";
+		currentView = currentViewList[idx];
+		document.getElementById("image_slider").style.display = 'block';
+		document.getElementById("video_canvas").style.display = 'none';
+		ChangeFrame();
+	}
+
+	function ClickInput(){
+		document.getElementById("method_author").innerHTML = "&nbsp";
+		document.getElementById("method_title").innerHTML = "&nbsp";
+		document.getElementById("method_publication").innerHTML = "&nbsp";
+		idx = 0;
+		var li_list = document.getElementById("current-view-ul").children;
+		console.log(idx);
+		console.log(li_list);
+		for(i = 0; i < li_list.length; i++){
+			li_list[i].className = "";
+		}
+		li_list[idx].className = "active";
+		document.getElementById("image_slider").style.display = 'none';
+		document.getElementById("video_canvas").style.display = 'block';
+		ChangeFrame();
+	}
+
+
+
+	</script>
+
+
+</body>
+</html>
